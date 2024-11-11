@@ -1,12 +1,22 @@
 import { Title } from '../../assets/LoginPage'
 import * as s from './Login.style'
 import { Email, Password } from '../../assets/LoginPage'
+import { useNavigate } from 'react-router-dom'
 
 export default function Login() {
+  const navigate = useNavigate()
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    console.log('Login')
+
+    navigate('/')
+  }
+
   return (
     <s.LoginContainer>
       <Title />
-      <s.Form>
+      <s.Form onSubmit={handleSubmit}>
         <SearchInput type="text" />
         <SearchInput type="password" />
         <button type="submit">로그인 하기</button>
