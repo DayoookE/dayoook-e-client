@@ -1,0 +1,6 @@
+export { default as EnterGreen } from './ic_enter_green.svg'
+export { default as MainBackground } from './img_main_background.svg'
+export { default as EnterRightGray } from './ic_enter_right_gray.svg'
+export { default as EnterRightWhite } from './ic_enter_right_white.svg'
+export { ReactComponent as NextArrow } from './ic_next_arrow.svg'
+export { ReactComponent as PrevArrow } from './ic_prev_arrow.svg'

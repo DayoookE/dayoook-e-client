@@ -1,0 +1,6 @@
+export { default as HomeGreen } from './ic_home_green.svg'
+export { default as HomeWhite } from './ic_home_white.svg'
+export { default as Logo } from './ic_logo.svg'
+export { default as Logout } from './ic_logout.svg'
+export { default as TutorGreen } from './ic_tutor_green.svg'
+export { default as TutorWhite } from './ic_tutor_white.svg'
