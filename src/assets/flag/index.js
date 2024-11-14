@@ -1,0 +1,6 @@
+export { default as CnIcon } from './ic_cn.svg'
+export { default as EnIcon } from './ic_en.svg'
+export { default as KoIcon } from './ic_ko.svg'
+export { default as RuIcon } from './ic_ru.svg'
+export { default as TlIcon } from './ic_tl.svg'
+export { default as ViIcon } from './ic_vi.svg'

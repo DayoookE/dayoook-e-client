@@ -1,5 +1,8 @@
 body {
   margin: 0;
+  background-color: #fffef8;
+  color: #525252;
+  top: 0px !important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -10,4 +13,16 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.skiptranslate iframe {
+  display: none !important;
+}
+
+body > iframe {
+  display: none;
+}
+
+div#goog-gt-tt {
+  display: none !important;
 }

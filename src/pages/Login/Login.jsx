@@ -3,12 +3,13 @@ import * as s from './Login.style'
 import { Email, Password } from '../../assets/LoginPage'
 import { useNavigate } from 'react-router-dom'
 
-export default function Login() {
+export default function Login({ setIsLogin }) {
   const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log('Login')
+    setIsLogin(true)
 
     navigate('/')
   }
