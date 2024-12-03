@@ -2,7 +2,7 @@ import './App.css'
 import { Route, Routes } from 'react-router'
 import { useState } from 'react'
 import { Navigate } from 'react-router-dom'
-import { Login, Main } from './pages'
+import { Login, Main, Tutor, Study, FairyRead, Mypage, Review } from './pages'
 
 function App() {
   const [isLogin, setIsLogin] = useState(false)
@@ -20,7 +20,17 @@ function App() {
         }
       />
       <Route path="/" element={<Main setIsLogin={setIsLogin} />} />
-      <Route path="tutorlist" element={<Main setIsLogin={setIsLogin} />} />
+      <Route path="/tutorlist" element={<Tutor setIsLogin={setIsLogin} />} />
+      <Route path="/study" element={<Study setIsLogin={setIsLogin} />} />
+      <Route path="/mypage" element={<Mypage setIsLogin={setIsLogin} />} />
+      <Route
+        path="/study/fairyread/:fairyId"
+        element={<FairyRead setIsLogin={setIsLogin} />}
+      />
+      <Route
+        path="/mypage/review/:mentoringId"
+        element={<Review setIsLogin={setIsLogin} />}
+      />
     </Routes>
   )
 }

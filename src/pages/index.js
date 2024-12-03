@@ -1,2 +1,7 @@
 export { default as Main } from './Main/Main'
 export { default as Login } from './Login/Login'
+export { default as Tutor } from './Tutor/Tutor'
+export { default as Study } from './Study/Study'
+export { default as Mypage } from './Mypage/Mypage'
+export { default as FairyRead } from './Study/FairyRead/FairyRead'
+export { default as Review } from './Review/Review'
