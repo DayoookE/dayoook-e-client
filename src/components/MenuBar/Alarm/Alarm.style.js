@@ -18,4 +18,5 @@ export const AlarmCount = styled.div`
   font-size: 1.2em;
   font-weight: bold;
   cursor: pointer;
+  color: ${(props) => (props.isStudy ? '#fff' : '#525252')};
 `

@@ -1,0 +1,7 @@
+export { default as GyeonWooImg } from './img_gyeonwoo.svg'
+export { default as ByeoljuImg } from './img_byeoljubujeon.svg'
+export { default as FairyImg } from './img_fairy.svg'
+export { default as HeungbuImg } from './img_heungbu.svg'
+export { default as SimcheongImg } from './img_simcheong.svg'
+export { default as HeartIcon } from './ic_heart.svg'
+export { default as HeartWhite } from './ic_heart_white.svg'
