@@ -22,6 +22,7 @@ export const ProfileMenu = styled.div`
   margin-left: 0.7em;
   height: 3em;
   justify-content: space-between;
+  color: ${(props) => (props.isStudy ? '#fff' : '#525252')};
   div:first-child {
     font-weight: bold;
     font-size: 1.2em;

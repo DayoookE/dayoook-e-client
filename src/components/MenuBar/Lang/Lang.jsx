@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { LangIcon } from '../../../assets/MenuBar'
+import { LangIcon, LangWhiteIcon } from '../../../assets/MenuBar'
 import {
   CnIcon,
   KoIcon,
@@ -11,7 +11,7 @@ import {
 import { MenuIcon } from '../MenuBar.style'
 import * as s from './Lang.style'
 
-export default function Lang() {
+export default function Lang({ isStudy }) {
   const [selectedLanguage, setSelectedLanguage] = useState('ko')
 
   useEffect(() => {
@@ -62,7 +62,7 @@ export default function Lang() {
 
   return (
     <s.LangContainer>
-      <MenuIcon src={LangIcon} alt="언어" />
+      <MenuIcon src={isStudy ? LangWhiteIcon : LangIcon} alt="언어" />
       <s.SelectLangFlag
         src={
           selectedLanguage === 'ko'
