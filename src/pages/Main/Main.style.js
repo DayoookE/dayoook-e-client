@@ -30,6 +30,7 @@ export const RecommendButton = styled.button`
   outline: none;
   padding: 0.9em 1.2em 0.8em 1.2em;
   height: 3em;
+  color: #525252;
   &:hover {
     background-color: #ffe066;
   }
