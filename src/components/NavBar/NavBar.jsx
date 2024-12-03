@@ -6,6 +6,10 @@ import {
   TutorWhite,
   Logo,
   Logout,
+  StudyGreen,
+  StudyWhite,
+  MypageGreen,
+  MypageWhite,
 } from '../../assets/NavBar'
 import * as s from './NavBar.style'
 
@@ -36,8 +40,18 @@ export default function NavBar({ setIsLogin }) {
       {NavItemContent.map((item) => (
         <NavItem
           key={item.text}
-          isActive={path == item.path}
-          icon={path == item.path ? item.activeIcon : item.icon}
+          isActive={
+            path == item.path ||
+            ((item.path == '/study' || item.path == '/mypage') &&
+              path.includes(item.path))
+          }
+          icon={
+            path == item.path ||
+            ((item.path == '/study' || item.path == '/mypage') &&
+              path.includes(item.path))
+              ? item.activeIcon
+              : item.icon
+          }
           text={item.text}
           onClick={
             item.text == '로그아웃'
@@ -72,6 +86,18 @@ const NavItemContent = [
     icon: TutorWhite,
     text: '튜터 목록',
     path: '/tutorlist',
+  },
+  {
+    activeIcon: StudyGreen,
+    icon: StudyWhite,
+    text: '학습',
+    path: '/study',
+  },
+  {
+    activeIcon: MypageGreen,
+    icon: MypageWhite,
+    text: '마이페이지',
+    path: '/mypage',
   },
   {
     activeIcon: Logout,
