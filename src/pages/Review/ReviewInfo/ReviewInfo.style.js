@@ -67,14 +67,33 @@ export const ContentWrapper = styled.div`
 
 export const TitleContainer = styled(ContentWrapper)`
   height: 3.4em;
+  display: flex;
+  align-items: center;
+
   div:first-child {
-    font-size: 1.5em;
-    font-weight: 700;
-    margin-bottom: 0.1em;
+    div:first-child {
+      font-size: 1.5em;
+      font-weight: 700;
+      margin-bottom: 0.1em;
+    }
+    div:last-child {
+      font-size: 1.1em;
+      font-weight: 700;
+    }
   }
-  div {
-    font-size: 1.1em;
-    font-weight: 700;
+
+  img {
+    cursor: pointer;
+    margin-left: auto;
+    width: 1.8em;
+    height: 1.8em;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+    &:active {
+      transform: scale(0.9);
+    }
   }
 `
 
@@ -136,4 +155,60 @@ export const ReviewInfoContainer = styled.div`
   width: 18em;
   height: 100%;
   margin-right: 1em;
+`
+
+export const EmptyContent = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 1.4em;
+  font-weight: bold;
+`
+
+export const ReviewList = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 1em;
+  border-bottom: 1px solid #f1f1f1;
+  align-items: center;
+
+  &:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+  }
+  &:active {
+    background-color: #e1e1e1;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  div:first-child {
+    font-size: 1.1em;
+    font-weight: 700;
+  }
+  div:last-child {
+    font-size: 0.9em;
+  }
+`
+
+export const ReviewListPosition = styled.div`
+  position: relative;
+  background-color: white;
+  z-index: 999;
+`
+
+export const ReviewListContainer = styled.div`
+  position: absolute;
+  box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  border-radius: 1em;
+  margin-top: -0.7em;
+  background-color: white;
+  height: 11em;
+  min-height: 11em;
+  max-height: 11em;
+  overflow: auto;
 `
