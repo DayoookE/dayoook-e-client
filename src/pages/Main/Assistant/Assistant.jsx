@@ -12,7 +12,7 @@ export default function Assistant({ userInfo }) {
       title: `${userInfo.upcomingLesson.name} 튜터의 수업이 곧 시작해요!`,
       subtitle: '수업 시작 시간',
       content: new Date(userInfo.upcomingLesson.startAt).toLocaleString(),
-      link: '/tutorlist',
+      link: userInfo.upcomingLesson.roomUrl, // roomUrl을 link로 설정
       alarm: true,
     }] : []),
     {
@@ -45,6 +45,17 @@ export default function Assistant({ userInfo }) {
 const AssistantItem = ({ icon, title, subtitle, content, link, alarm }) => {
   const navigate = useNavigate()
 
+  const handleClick = () => {
+    if (link) {
+      // roomUrl이면 새 창으로 열기
+      if (link.startsWith('http')) {
+        window.open(link, '_blank') // 새 창으로 열기
+      } else {
+        navigate(link) // 내부 링크로 이동
+      }
+    }
+  }
+
   return (
       <s.AssistantItemContainer alarm={alarm}>
         <img src={icon} alt="icon" />
@@ -59,7 +70,7 @@ const AssistantItem = ({ icon, title, subtitle, content, link, alarm }) => {
             <s.EnterIcon
                 src={alarm ? EnterRightWhite : EnterRightGray}
                 alt="Enter"
-                onClick={() => navigate(link)}
+                onClick={handleClick} // 클릭 시 handleClick 호출
             />
         )}
       </s.AssistantItemContainer>
