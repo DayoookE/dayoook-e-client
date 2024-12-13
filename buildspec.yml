@@ -11,6 +11,12 @@ phases:
       - npm install --legacy-peer-deps
   build:
     commands:
+      # 환경 변수 주입
+      - export REACT_APP_FAST_API_URL=$REACT_APP_FAST_API_URL
+      - export REACT_APP_SPRING_API_URL=$REACT_APP_SPRING_API_URL
+      - export REACT_APP_S3_BUCKET=$REACT_APP_S3_BUCKET
+
+      # React 앱 빌드
       - npm run build
 
 artifacts:
