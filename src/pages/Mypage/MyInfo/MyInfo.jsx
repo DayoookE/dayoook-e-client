@@ -26,6 +26,17 @@ const getLevelName = (level) => {
   return levelMapping[level] || "알 수 없음";
 };
 
+const getLanguage = (language) => {
+  const languageMapping = {
+    "대한민국": "🇰🇷",
+    "중국": "🇨🇳",
+    "베트남": "🇻🇳",
+    "영어": "🇺🇸",
+    "러시아": "🇷🇺",
+    "필리핀": "🇵🇭",
+  };
+  return languageMapping[language] || "🇰🇷";
+};
 
 const ProgressProvider = ({ valueStart, valueEnd, children }) => {
   const [value, setValue] = useState(valueStart);
