@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
 import { Login, Main, Tutor, Study, FairyRead, Mypage, Review } from './pages'
 import TutorMypage from './pages/Mypage/TutorMypage/TutorMypage'
+import { UserProvider } from './components/common/UserContext';
 
 // 로그인 여부와 튜터 여부를 체크하는 PrivateRoute
 const PrivateRoute = ({ isLogin, isTutor, children }) => {
@@ -40,6 +41,7 @@ function App() {
     }
 
     return (
+        <UserProvider>
         <Routes>
             <Route
                 path="/login"
@@ -107,6 +109,7 @@ function App() {
             />
             <Route path="*" element={<Navigate to="/" />} />
         </Routes>
+        </UserProvider>
     )
 }
 

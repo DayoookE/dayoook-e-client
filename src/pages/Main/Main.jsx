@@ -1,51 +1,16 @@
 import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import { Home, Assistant, Info } from '.'
 import { MenuBar, NavBar } from '../../components'
 import ModalComponent from '../../components/ModalComponent/ModalComponent'
 import * as s from './Main.style'
+import { useUser } from '../../components/common/UserContext';
 
 export default function Main({ setIsLogin }) {
   const navigate = useNavigate()
   const [modalIsOpen, setIsOpen] = useState(false)
-  const [userInfo, setUserInfo] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const { userInfo, loading, fetchUserInfo } = useUser(); // fetchUserInfo 가져오기
 
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const token = localStorage.getItem('dayookeAccessToken')
-        if (!token) {
-          setIsLogin(false)
-          navigate('/login')
-          return
-        }
-
-        // users/info API 호출 - axios 인스턴스 생성하여 사용
-        const axiosInstance = axios.create({
-          baseURL: process.env.REACT_APP_SPRING_API_URL,
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          }
-        });
-
-        const response = await axiosInstance.get('/users/info');
-        console.log('유저 정보 조회 성공:', response.data)
-        setUserInfo(response.data.result)
-      } catch (error) {
-        console.error('유저 정보 조회 실패:', error.response || error)
-        if (error.response?.status === 401) {
-          setIsLogin(false)
-          navigate('/login')
-        }
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchUserInfo()
-  }, [navigate, setIsLogin])
 
   const handleSubmit = () => {
     setIsOpen(false)
@@ -55,6 +20,19 @@ export default function Main({ setIsLogin }) {
       },
     })
   }
+
+  // 유저 정보가 없을 경우 다시 호출
+  useEffect(() => {
+    if (!userInfo && !loading) {
+      fetchUserInfo()
+          .then(() => {
+            console.log('유저 정보를 성공적으로 다시 불러왔습니다.');
+          })
+          .catch((error) => {
+            console.error('유저 정보 재조회 중 오류 발생:', error);
+          });
+    }
+  }, [userInfo, loading, fetchUserInfo]);
 
   if (loading) return <div>로딩 중...</div>
 
