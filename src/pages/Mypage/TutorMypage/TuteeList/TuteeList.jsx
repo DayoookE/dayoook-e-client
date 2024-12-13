@@ -1,8 +1,61 @@
 import { FlowerIcon, LeafIcon, FruitIcon } from '../../../../assets/level'
 import { EnterClassIcon, ExitClassIcon } from '../../../../assets/Mypage/Tutor'
+import axios from 'axios'
+import { useState, useEffect } from 'react'
 import * as s from './TuteeList.style'
+import LessonModal from '../LessonModal/LessonModal'
 
 export default function TuteeList() {
+  const [userInfo, setUserInfo] = useState(null)
+  const [tuteeList, setTuteeList] = useState([])
+  const [lessonId, setLessonId] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const token = localStorage.getItem('dayookeAccessToken')
+        if (!token) {
+          setUserInfo(null)
+          return
+        }
+        const response = await axios.get(
+          `${process.env.REACT_APP_SPRING_API_URL}/users/info`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+        setUserInfo(response.data.result)
+      } catch (error) {
+        console.error('유저 정보 조회 실패:', error)
+        setUserInfo(null)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchUserInfo()
+  }, [])
+
+  // 신청 튜티 목록
+  useEffect(() => {
+    const token = localStorage.getItem('dayookeAccessToken')
+    const fetchTuteeList = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_SPRING_API_URL}/tutors/application/${userInfo.id}?page=1`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+        console.log('response:', response)
+        setTuteeList(response?.data?.result.content || [])
+      } catch (error) {
+        console.error('Error fetching tutee list:', error)
+      }
+    }
+    fetchTuteeList()
+  }, [userInfo])
+
   return (
     <s.MyTuteeWrapper>
       <s.Title>✏️&nbsp;&nbsp;나의 튜티</s.Title>
@@ -16,12 +69,68 @@ export default function TuteeList() {
 }
 
 const TuteeItem = ({ tutee }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const [modalIsOpen, setIsOpenModal] = useState(false)
+  const [sdlessonId, setSdLessonId] = useState(null)
+
+  console.log('tutee:', tutee)
+  console.log('lessonId:', tutee.lessonId)
+
+  const enterClassHandler = async (tuteeId) => {
+    console.log('enter class:', tuteeId)
+    // lessons/schedules 호출
+
+    const token = localStorage.getItem('dayookeAccessToken')
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_SPRING_API_URL}/lessons/schedules`,
+        {
+          lessonId: tutee.lessonId,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      console.log('response:', response)
+      setSdLessonId(response.data.result.id)
+      setIsOpen(true)
+    } catch (error) {
+      console.error('Error fetching lesson id:', error)
+    }
+  }
+
+  const exitClassHandler = (tuteeId) => {
+    console.log('exit class:', tuteeId)
+    // lessons/schedules/{scheduleId}/complete patch 호출
+    const token = localStorage.getItem('dayookeAccessToken')
+    axios
+      .patch(
+        `${process.env.REACT_APP_SPRING_API_URL}/lessons/schedules/${sdlessonId}/complete`,
+        {
+          id: sdlessonId,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then((response) => {
+        console.log('response:', response)
+      })
+      .catch((error) => {
+        console.error('Error exiting class:', error)
+      })
+
+    setIsOpen(false)
+  }
+
   return (
     <s.TuteeItemWrapper>
-      <img src={tutee.img} />
+      <img
+        src={`${process.env.REACT_APP_S3_BUCKET}${tutee.tuteeInfo.profileUrl}`}
+      />
       <s.InfoWrapper>
-        <div>{tutee.name}</div>
-        <div>{tutee.level}</div>
+        <div>{tutee.tuteeInfo.name}</div>
+        <div>{tutee.message}</div>
       </s.InfoWrapper>
       <s.DetailWrapper>
         <s.ReviewDiv review={tutee.review}>
@@ -30,84 +139,20 @@ const TuteeItem = ({ tutee }) => {
         <div>다음 수업: {tutee.nextClass}</div>
       </s.DetailWrapper>
       <s.EnterImg
-        src={tutee.classOpen ? ExitClassIcon : EnterClassIcon}
+        src={isOpen ? ExitClassIcon : EnterClassIcon}
+        onClick={() =>
+          isOpen ? exitClassHandler(tutee.id) : enterClassHandler(tutee.id)
+        }
         alt="수업가기"
+      />
+
+      <LessonModal
+        modalIsOpen={modalIsOpen}
+        setIsOpen={setIsOpenModal}
+        handleSubmit={() => {
+          isOpen ? exitClassHandler(tutee.id) : enterClassHandler(tutee.id)
+        }}
       />
     </s.TuteeItemWrapper>
   )
 }
-
-const tuteeList = [
-  {
-    name: '양희령 튜티',
-    img: FruitIcon,
-    review: true,
-    level: '열매 학생',
-    nextClass: '10월 15일 오후 3시',
-    classOpen: true,
-  },
-  {
-    name: '황규혁 튜티',
-    img: FlowerIcon,
-    review: true,
-    level: '꽃 학생',
-    nextClass: '10월 18일 오전 9시',
-    classOpen: false,
-  },
-  {
-    name: '박준용 튜티',
-    img: LeafIcon,
-    review: false,
-    level: '잎 학생',
-    nextClass: '10월 15일 오후 3시',
-    classOpen: false,
-  },
-  {
-    name: '양희령 튜티',
-    img: FruitIcon,
-    review: true,
-    level: '열매 학생',
-    nextClass: '10월 15일 오후 3시',
-    classOpen: false,
-  },
-  {
-    name: '황규혁 튜티',
-    img: FlowerIcon,
-    review: true,
-    level: '꽃 학생',
-    nextClass: '10월 18일 오전 9시',
-    classOpen: false,
-  },
-  {
-    name: '박준용 튜티',
-    img: LeafIcon,
-    review: false,
-    level: '잎 학생',
-    nextClass: '10월 15일 오후 3시',
-    classOpen: false,
-  },
-  {
-    name: '양희령 튜티',
-    img: FruitIcon,
-    review: true,
-    level: '열매 학생',
-    nextClass: '10월 15일 오후 3시',
-    classOpen: false,
-  },
-  {
-    name: '황규혁 튜티',
-    img: FlowerIcon,
-    review: true,
-    level: '꽃 학생',
-    nextClass: '10월 18일 오전 9시',
-    classOpen: false,
-  },
-  {
-    name: '박준용 튜티',
-    img: LeafIcon,
-    review: false,
-    level: '잎 학생',
-    nextClass: '10월 15일 오후 3시',
-    classOpen: false,
-  },
-]
