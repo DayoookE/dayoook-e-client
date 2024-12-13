@@ -10,10 +10,11 @@ import {
   StudyWhite,
   MypageGreen,
   MypageWhite,
+  TutorMypageIcon,
 } from '../../assets/NavBar'
 import * as s from './NavBar.style'
 
-export default function NavBar({ setIsLogin }) {
+export default function NavBar({ setIsLogin, isTutor }) {
   const navigate = useNavigate()
   const location = useLocation()
   const path = location.pathname
@@ -35,44 +36,78 @@ export default function NavBar({ setIsLogin }) {
   }
 
   return (
-    <s.NavBarContainer>
+    <s.NavBarContainer isTutor={isTutor}>
       <s.Logo src={Logo} alt="Logo" onClick={() => navigate('/')} />
-      {NavItemContent.map((item) => (
-        <NavItem
-          key={item.text}
-          isActive={
-            path == item.path ||
-            ((item.path == '/study' || item.path == '/mypage') &&
-              path.includes(item.path))
-          }
-          icon={
-            path == item.path ||
-            ((item.path == '/study' || item.path == '/mypage') &&
-              path.includes(item.path))
-              ? item.activeIcon
-              : item.icon
-          }
-          text={item.text}
-          onClick={
-            item.text == '로그아웃'
-              ? handleLogout
-              : () => handleNavClick(item.path)
-          }
-          isLogout={item.text == '로그아웃'}
-        />
-      ))}
+      {!isTutor &&
+        NavItemContent.map((item) => (
+          <NavItem
+            key={item.text}
+            isActive={
+              path == item.path ||
+              ((item.path == '/study' || item.path == '/mypage') &&
+                path.includes(item.path))
+            }
+            icon={
+              path == item.path ||
+              ((item.path == '/study' || item.path == '/mypage') &&
+                path.includes(item.path))
+                ? item.activeIcon
+                : item.icon
+            }
+            text={item.text}
+            onClick={
+              item.text == '로그아웃'
+                ? handleLogout
+                : () => handleNavClick(item.path)
+            }
+            isLogout={item.text == '로그아웃'}
+          />
+        ))}
+      {isTutor &&
+        TutorNavItemContent.map((item) => (
+          <NavItem
+            isTutor={isTutor}
+            key={item.text}
+            isActive={path == item.path}
+            icon={path == item.path ? item.activeIcon : item.icon}
+            text={item.text}
+            onClick={
+              item.text == '로그아웃'
+                ? handleLogout
+                : () => handleNavClick(item.path)
+            }
+            isLogout={item.text == '로그아웃'}
+          />
+        ))}
     </s.NavBarContainer>
   )
 }
 
-const NavItem = ({ icon, text, isActive, isLogout, onClick }) => {
+const NavItem = ({ icon, text, isActive, isLogout, onClick, isTutor }) => {
   return (
     <s.NavItem active={isActive} isLogout={isLogout} onClick={onClick}>
       <s.NavIcon src={icon} alt={text} />
-      <s.NavText active={isActive}>{text}</s.NavText>
+      <s.NavText isTutor={isTutor} active={isActive}>
+        {text}
+      </s.NavText>
     </s.NavItem>
   )
 }
+
+const TutorNavItemContent = [
+  {
+    activeIcon: TutorMypageIcon,
+    icon: MypageWhite,
+    text: '마이페이지',
+    path: '/mypage',
+  },
+  {
+    activeIcon: Logout,
+    icon: Logout,
+    text: '로그아웃',
+    path: '/login',
+  },
+]
 
 const NavItemContent = [
   {

@@ -9,7 +9,7 @@ export const NavBarContainer = styled.div`
   height: 100%;
   min-height: 20em !important;
   overflow-y: auto;
-  background-color: #5eb561;
+  background-color: ${(props) => (props.isTutor ? '#5E84B5' : '#5eb561')};
   border-radius: 15px;
 `
 export const Logo = styled.img`
@@ -43,5 +43,6 @@ export const NavIcon = styled.img`
 export const NavText = styled.div`
   font-size: 0.9em;
   font-weight: bold;
-  color: ${(props) => (props.active ? '#5eb561' : '#fff')};
+  color: ${(props) =>
+    props.active ? (props.isTutor ? '#5E84B5' : '#5eb561') : '#fff'};
 `
