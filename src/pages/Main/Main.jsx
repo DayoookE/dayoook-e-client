@@ -52,7 +52,6 @@ export default function Main({setIsLogin}) {
     const handleSubmit = async (languageLevel, preferredGender, selectedLanguages, availableTimes, currentStep) => {
         try {
             setIsOpen(false)
-
             const times = ["오전", "오후", "저녁"]
 
             const preferred_days = []
@@ -108,7 +107,20 @@ export default function Main({setIsLogin}) {
         }
     }
 
-    if (loading) return <div>로딩 중...</div>
+  // 유저 정보가 없을 경우 다시 호출
+  useEffect(() => {
+    if (!userInfo && !loading) {
+      fetchUserInfo()
+          .then(() => {
+            console.log('유저 정보를 성공적으로 다시 불러왔습니다.');
+          })
+          .catch((error) => {
+            console.error('유저 정보 재조회 중 오류 발생:', error);
+          });
+    }
+  }, [userInfo, loading, fetchUserInfo]);
+
+  if (loading) return <div>로딩 중...</div>
 
     return (
         <s.MainContainer>
