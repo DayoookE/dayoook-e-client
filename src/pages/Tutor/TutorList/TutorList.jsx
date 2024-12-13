@@ -2,8 +2,13 @@ import TutorSelect from '../TutorSelect/TutorSelect'
 import { DotIcon, StarIcon } from '../../../assets/icon'
 import { Face1, Face2, Face3, Face4 } from '../../../assets/face'
 import * as s from './TutorList.style'
+import {useEffect} from "react";
 
-export default function TutorList({ isRecommend, setIsRecommend }) {
+export default function TutorList({ isRecommend, setIsRecommend, recommendTutors }) {
+  useEffect(() => {
+    // TODO
+  }, [recommendTutors])
+
   return (
     <s.TutorListContentContainer>
       {/* 튜터 필터링 선택 */}
