@@ -18,6 +18,34 @@ export const TutorName = styled.div`
   margin-bottom: 0.2em;
 `
 
+export const TutorLevel = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  font-size: 0.8em;
+  div:nth-child(1) {
+    font-weight: 700;
+    }
+  div:nth-child(2) {
+    font-weight: 500;
+  }
+`
+
+export const TutorSchedule = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  font-size: 0.8em;
+  div:nth-child(1) {
+    font-weight: 700;
+    }
+  div:nth-child(2) {
+    font-weight: 500;
+  }
+`
+
 export const TuteeAge = styled.div`
   display: flex;
   justify-content: space-evenly;
