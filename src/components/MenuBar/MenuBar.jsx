@@ -6,7 +6,7 @@ export default function MenuBar() {
 
   return (
     <s.MenuBarContainer>
-      <Lang isStudy={isStudy} />
+      {/* <Lang isStudy={isStudy} /> */}
       <Alarm isStudy={isStudy} />
       <Profile isStudy={isStudy} />
     </s.MenuBarContainer>
