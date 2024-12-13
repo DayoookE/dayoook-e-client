@@ -105,3 +105,13 @@ export const ItemTag = styled.div`
   width: fit-content;
   font-weight: bold;
 `
+
+export const DetailLink = styled.a`
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
