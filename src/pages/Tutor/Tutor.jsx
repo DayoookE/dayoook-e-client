@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import { TutorSummary, TutorList, TutorMenu } from '.'
-import { NavBar } from '../../components'
+import {useState} from 'react'
+import {useLocation} from 'react-router-dom'
+import {TutorSummary, TutorList, TutorMenu} from '.'
+import {NavBar} from '../../components'
 import * as ms from '../Main/Main.style'
 import * as s from './Tutor.style'
 
