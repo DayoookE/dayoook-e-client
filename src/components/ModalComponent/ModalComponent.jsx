@@ -120,7 +120,7 @@ export default function ModalComponent({
             <img src={NextIcon} alt="Next" />
           </s.ModalButton>
         ) : (
-          <s.ModalButton onClick={handleSubmit}>
+          <s.ModalButton onClick={() => {handleSubmit(languageLevel, preferredGender, selectedLanguages, availableTimes)}}>
             <div>제출</div>
           </s.ModalButton>
         )}

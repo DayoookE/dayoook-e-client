@@ -7,8 +7,8 @@ import * as s from './Tutor.style'
 
 export default function Tutor({ setIsLogin }) {
   const location = useLocation()
-  const [isRecommend, setIsRecommend] = useState(location.state?.isRecommend)
-  const [recommendTutors, setRecommendTutors] = useState(location.state?.recommendTutors)
+  const [isRecommend, setIsRecommend] = useState(location.state?.isRecommend || false)
+  const [recommendTutors, setRecommendTutors] = useState(location.state?.recommendTutors ?? [])
   return (
     <ms.MainContainer>
       <NavBar setIsLogin={setIsLogin} />
