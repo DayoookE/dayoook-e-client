@@ -1,59 +1,148 @@
 import { StarIcon } from '../../../assets/icon'
-import { Face1 } from '../../../assets/face'
 import * as s from './TutorSummary.style'
+import TutorApplyModal from '../TutorApplyModal/TutorApplyModal'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
-export default function TutorSummary() {
+const getLanguage = (language) => {
+  const languageMapping = {
+    대한민국: '🇰🇷',
+    중국: '🇨🇳',
+    베트남: '🇻🇳',
+    영어: '🇺🇸',
+    러시아: '🇷🇺',
+    필리핀: '🇵🇭',
+  }
+  return languageMapping[language] || '🇰🇷'
+}
+
+export default function TutorSummary({ selectedTutor }) {
+  const [tutorDetail, setTutorDetail] = useState(null)
+  const [modalIsOpen, setIsOpen] = useState(false)
+  const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const fetchTutorDetail = async () => {
+      if (!selectedTutor) return
+
+      try {
+        setLoading(true)
+        const response = await axios.get(
+            `${process.env.REACT_APP_SPRING_API_URL}/tutors/${selectedTutor.id}`
+        )
+        setTutorDetail(response.data.result)
+      } catch (error) {
+        console.error('Error fetching tutor details:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchTutorDetail()
+  }, [selectedTutor])
+
+  const handleSubmit = async () => {
+    try {
+      const token = localStorage.getItem('dayookeAccessToken')
+      if (!token) {
+        alert('로그인이 필요한 서비스입니다.')
+        return
+      }
+
+      await axios.post(
+          `${process.env.REACT_APP_SPRING_API_URL}/applications`,
+          {
+            tutorId: selectedTutor.id,
+            timeSlots: [
+              {
+                dayId: 4,
+                timeSlotId: 9,
+              },
+            ],
+            message,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+      )
+      alert('🙌 튜티 신청이 완료되었습니다! 🙌')
+    } catch (error) {
+      console.error('Error applying tutor:', error)
+      alert('😢 튜티 신청에 실패했습니다.\n가능한 시간을 확인하여 다시 시도해주세요. 😢')
+    } finally {
+      setIsOpen(false)
+    }
+  }
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  if (!selectedTutor || !tutorDetail) {
+    return <div>튜터를 선택해주세요</div>
+  }
+
   return (
-    <s.TutorSummaryContainer>
-      <s.Title>튜터 소개 요약</s.Title>
-      <s.TutorSummaryCard>
-        <s.SummaryProfile>
-          <s.SummaryImg src={Face1} alt="user" />
-          <s.SummaryTitle>
-            <div>백종원</div>
-            <div>
-              {Array.from({ length: 5 }, (_, idx) => (
-                <img key={idx} src={StarIcon} alt="star" />
-              ))}
-            </div>
-          </s.SummaryTitle>
-        </s.SummaryProfile>
+      <s.TutorSummaryContainer>
+        <s.Title>튜터 소개 요약</s.Title>
+        <s.TutorSummaryCard>
+          <s.SummaryProfile>
+            <s.SummaryImg
+                src={`${process.env.REACT_APP_S3_BUCKET}${tutorDetail.profileUrl}`}
+                alt="tutor"
+            />
+            <s.SummaryTitle>
+              <div>{tutorDetail.name}</div>
+              <div>
+                {Array.from({ length: tutorDetail.rating || 0 }, (_, idx) => (
+                    <img key={idx} src={StarIcon} alt="star" />
+                ))}
+              </div>
+            </s.SummaryTitle>
+          </s.SummaryProfile>
 
-        <s.SummaryContent>
-          <s.SummaryDetail>
-            <div>튜티 주 연령</div>
-            <div>영유아, 10대</div>
-          </s.SummaryDetail>
-          <s.SummaryDetail lang>
-            <div>가능 언어</div>
-            <div>🇰🇷 🇨🇳 🇷🇺 🇻🇳 🇵🇭</div>
-          </s.SummaryDetail>
-          <s.SummaryDetail>
-            <div>튜티 소개</div>
-            <div>
-              안녕하세요!
-              <br />
-              전세계를 돌아다니며 음식과 함께 언어를 배운 백종원입니다.
-              <br />
-              <br />
-              어느 나라에 가서든지 음식 주문하는 데에 문제 없게끔
-              만들어드리겠습니다
-            </div>
-          </s.SummaryDetail>
-          <s.SummaryDetail career>
-            <div>경력</div>
-            <div>
-              인하대학교 국어교육과 학사
-              <br />
-              인하대학교 다문화교육 석사
-              <br />
-              인하대학교 국어교육과 교수
-            </div>
-          </s.SummaryDetail>
-        </s.SummaryContent>
+          <s.SummaryContent>
+            <s.SummaryDetail>
+              <div>튜티 주 연령</div>
+              <div>{tutorDetail.ageGroups.map(age => age.name).join(', ')}</div>
+            </s.SummaryDetail>
+            <s.SummaryDetail lang>
+              <div>가능 언어</div>
+              <div>
+                {tutorDetail.languages.map(lang => getLanguage(lang.name)).join(' ')}
+              </div>
+            </s.SummaryDetail>
+            <s.SummaryDetail>
+              <div>튜티 소개</div>
+              <div>{tutorDetail.introduction}</div>
+            </s.SummaryDetail>
+            <s.SummaryDetail career>
+              <div>경력</div>
+              <div>
+                {tutorDetail.experiences.map(exp => (
+                    <div key={exp.id}>
+                      {exp.description}
+                      <br/>
+                    </div>
+                ))}
+              </div>
+            </s.SummaryDetail>
+          </s.SummaryContent>
 
-        <s.SummaryApplyButton>튜티 신청하기</s.SummaryApplyButton>
-      </s.TutorSummaryCard>
-    </s.TutorSummaryContainer>
+          <s.SummaryApplyButton onClick={() => setIsOpen(true)}>
+            튜티 신청하기
+          </s.SummaryApplyButton>
+          <TutorApplyModal
+              setIsOpen={setIsOpen}
+              modalIsOpen={modalIsOpen}
+              card={tutorDetail}
+              setMessage={setMessage}
+              handleSubmit={handleSubmit}
+          />
+        </s.TutorSummaryCard>
+      </s.TutorSummaryContainer>
   )
 }
