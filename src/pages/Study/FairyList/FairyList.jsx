@@ -1,82 +1,84 @@
-import { Link } from 'react-router-dom'
+import {Link, useLocation, useNavigate} from 'react-router-dom'
 import {
-  ByeoljuImg,
-  FairyImg,
-  GyeonWooImg,
-  HeungbuImg,
-  SimcheongImg,
-  HeartIcon,
-  HeartWhite,
+    ByeoljuImg,
+    FairyImg,
+    GyeonWooImg,
+    HeungbuImg,
+    SimcheongImg,
+    HeartIcon,
+    HeartWhite,
 } from '../../../assets/FairyList'
 import * as s from './FairyList.style'
+import axios from "axios";
 
-export default function FairyList({ setPageState }) {
-  return (
-    <s.FairyListContainer>
-      {koFairyList.map((fairy) => (
-        <s.BookItem>
-          {/* 동화 표지 */}
-          <Link
-            onClick={() => setPageState('fairyRead')}
-            to={`/study/fairyread/${fairy.url}`}
-          >
-            <s.FairyBookCover percent={fairy.percent}>
-              <s.BookImgCover>
-                <img src={fairy.img} alt="img" />
-              </s.BookImgCover>
-            </s.FairyBookCover>
-          </Link>
-
-          {/* 동화 이름 */}
-          <s.BookInfoContainer titleColor={fairy.titleColor}>
-            <div>{fairy.title}</div>
-            <img src={fairy.heart ? HeartIcon : HeartWhite} alt="heart" />
-          </s.BookInfoContainer>
-        </s.BookItem>
-      ))}
-    </s.FairyListContainer>
-  )
+const genTitleColor = () => {
+    const colors = [
+        "#4EB1A6",
+        "#4A84BD",
+        "#31ADE7",
+        "#EE696F",
+        "#FC9230",
+    ]
+    const randomIdx = Math.floor(Math.random() * colors.length);
+    return colors[randomIdx];
 }
 
-const koFairyList = [
-  {
-    title: '견우와 직녀',
-    img: GyeonWooImg,
-    heart: true,
-    percent: 90,
-    titleColor: '#4EB1A6',
-    url: 'gyeonwoo',
-  },
-  {
-    title: '별주부전',
-    img: ByeoljuImg,
-    heart: false,
-    percent: 30,
-    titleColor: '#4A84BD',
-    url: 'byeolju',
-  },
-  {
-    title: '흥부와 놀부',
-    img: HeungbuImg,
-    heart: false,
-    percent: 50,
-    titleColor: '#31ADE7',
-    url: 'heungbu',
-  },
-  {
-    title: '심청전',
-    img: SimcheongImg,
-    heart: true,
-    percent: 70,
-    titleColor: '#EE696F',
-    url: 'simcheong',
-  },
-  {
-    title: '선녀와 나무꾼',
-    img: FairyImg,
-    heart: false,
-    percent: 10,
-    titleColor: '#FC9230',
-    url: 'fairy',
-  },
-]
+export default function FairyList({setPageState, nationSelect, fairyTales, fetchFairyTales}) {
+    const navigate = useNavigate();
+    const handleLikeToggle = async (storybookId) => {
+        try {
+            const token = localStorage.getItem('dayookeAccessToken');
+            await axios.post(
+                `${process.env.REACT_APP_SPRING_API_URL}/storybooks/${storybookId}/toggle-like`,
+                {},  // empty body for POST request
+                {
+                    headers: {Authorization: `Bearer ${token}`},
+                }
+            );
+
+            fetchFairyTales(nationSelect);
+        } catch (error) {
+            console.error('Failed to toggle like:', error);
+        }
+    };
+
+
+    if (!fairyTales) {
+        return <s.FairyListContainer>Loading...</s.FairyListContainer>;
+    }
+
+    return (
+        <s.FairyListContainer>
+            {fairyTales.map((fairy, index) => (
+                    <s.BookItem key={fairy.id || index}>
+                        {/* 동화 표지 */}
+                        <s.FairyBookCover
+                            onClick={() => navigate(
+                                `/study/fairyread/${fairy.id}`, {
+                                    state: {lastPageNumber: fairy.lastPageNumber}
+                                }
+                            )}
+                            percent={((fairy.lastPageNumber - 0) / fairy.pageCount) * 100}>
+                            <s.BookImgCover>
+                                <img src={`${process.env.REACT_APP_S3_BUCKET}${fairy.thumbnailUrl}`} alt="img"/>
+                            </s.BookImgCover>
+                        </s.FairyBookCover>
+                        {/* 동화 이름 */}
+                        <s.BookInfoContainer titleColor={genTitleColor()}>
+                            <div>{fairy.title}</div>
+                            <img src={fairy.liked ? HeartIcon : HeartWhite}
+                                 alt="heart"
+                                 onClick={(e) => {
+                                     e.preventDefault();  // 이벤트 버블링 방지
+                                     handleLikeToggle(fairy.id);
+                                 }}
+                                 style={{cursor: 'pointer'}}  // 클릭 가능함을 표시
+                            />
+                        </s.BookInfoContainer>
+                    </s.BookItem>
+                )
+            )
+            }
+        </s.FairyListContainer>
+    )
+}
