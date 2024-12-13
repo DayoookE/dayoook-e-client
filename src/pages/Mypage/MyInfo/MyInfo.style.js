@@ -88,7 +88,8 @@ export const MyName = styled.div`
 `
 
 export const MyInfoNameWrapper = styled.div`
-  display: flex;
+  display: ${(props) => (props.isTutor ? 'block' : 'flex')};
+  justify-items: ${(props) => (props.isTutor ? 'center' : 'flex-start')};
   align-self: center;
   align-items: center;
 
@@ -124,7 +125,7 @@ export const MyInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 24em;
-  background-color: #ebf5e8;
+  background-color: ${(props) => (props.isTutor ? '#E8EFF5' : '#ebf5e8')};
   margin-left: auto;
   padding: 2.8em 1.8em 1.8em 1.5em;
 `
