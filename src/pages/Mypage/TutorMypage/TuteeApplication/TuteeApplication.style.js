@@ -6,11 +6,21 @@ export const EnterImg = styled.img`
   margin: auto 0;
   margin-left: 0.7em;
   cursor: pointer;
+  margin-left: auto;
+  margin-right: 0.7em;
 
   &:hover {
     transform: scale(1.1);
     background: #f0f0f0;
     border-radius: 100%;
+
+    // 연한 연두색 이미지에서 더 어두운 연두색 이미지로 변경
+    filter: brightness(1.1);
+  }
+
+  &:active {
+    transform: scale(1);
+    filter: brightness(1);
   }
 `
 
@@ -58,8 +68,11 @@ export const TuteeItemWrapper = styled.div`
   display: flex;
   padding: 1em;
   padding-right: 0.7em;
-  border-bottom: 1px solid #c1d3e2;
   align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  margin: 1em 0;
+  border-left: 0.5em solid #5e84b5;
 
   img {
     width: 3em;
@@ -70,11 +83,12 @@ export const TuteeItemWrapper = styled.div`
 
 export const ListWrapper = styled.div`
   flex: 1 1 0;
-  background-color: #fff;
+  background-color: #f5f5f5;
   box-shadow: 0 1px 3px 0.5px rgba(0, 0, 0, 0.15);
   border-radius: 1em;
   overflow: auto;
   padding: 0 1em;
+  margin-right: 1.4em;
 `
 
 export const MyTuteeWrapper = styled.div`
