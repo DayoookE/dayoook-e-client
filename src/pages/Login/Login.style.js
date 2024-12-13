@@ -104,3 +104,11 @@ export const LinkContainer = styled.div`
     color: #e75b5b;
   }
 `
+
+// Login.style.js에 추가
+export const ErrorMessage = styled.p`
+  color: #ff0000;
+  font-size: 14px;
+  margin-top: 8px;
+  text-align: center;
+`;
