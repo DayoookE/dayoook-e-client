@@ -27,8 +27,10 @@ export default function NavBar({ setIsLogin, isTutor }) {
     }
     localStorage.setItem('language', 'ko')
 
+    // 로그아웃 시, 로컬스토리지에 저장된 정보 삭제
+    localStorage.removeItem('dayookeAccessToken')
+    localStorage.removeItem('dayookeUserRole')
     setIsLogin(false)
-    navigate('/login')
   }
 
   const handleNavClick = (path) => {
