@@ -26,8 +26,6 @@ function App() {
     localStorage.getItem('dayookeAccessToken') !== null
   )
 
-  console.log(isTutor)
-
   // 페이지 새로고침 시 로그인 상태 유지
   // useEffect(() => {
   //   const token = localStorage.getItem('dayookeAccessToken')
@@ -65,7 +63,7 @@ function App() {
             path="/"
             element={
               <PrivateRoute isLogin={isLogin} isTutor={isTutor}>
-                <Main handleLogout={handleLogout} />
+                <Main handleLogout={handleLogout} setIsLogin={setIsLogin} />
               </PrivateRoute>
             }
           />
@@ -73,7 +71,7 @@ function App() {
             path="/tutorlist"
             element={
               <PrivateRoute isLogin={isLogin} isTutor={isTutor}>
-                <Tutor handleLogout={handleLogout} />
+                <Tutor handleLogout={handleLogout} setIsLogin={setIsLogin} />
               </PrivateRoute>
             }
           />
@@ -81,7 +79,7 @@ function App() {
             path="/study"
             element={
               <PrivateRoute isLogin={isLogin} isTutor={isTutor}>
-                <Study handleLogout={handleLogout} />
+                <Study handleLogout={handleLogout} setIsLogin={setIsLogin} />
               </PrivateRoute>
             }
           />
@@ -90,9 +88,12 @@ function App() {
             element={
               isLogin ? (
                 isTutor ? (
-                  <TutorMypage handleLogout={handleLogout} />
+                  <TutorMypage
+                    handleLogout={handleLogout}
+                    setIsLogin={setIsLogin}
+                  />
                 ) : (
-                  <Mypage handleLogout={handleLogout} />
+                  <Mypage handleLogout={handleLogout} setIsLogin={setIsLogin} />
                 )
               ) : (
                 <Navigate to="/login" />
@@ -103,7 +104,10 @@ function App() {
             path="/study/fairyread/:fairyId"
             element={
               <PrivateRoute isLogin={isLogin} isTutor={isTutor}>
-                <FairyRead handleLogout={handleLogout} />
+                <FairyRead
+                  handleLogout={handleLogout}
+                  setIsLogin={setIsLogin}
+                />
               </PrivateRoute>
             }
           />
@@ -111,7 +115,7 @@ function App() {
             path="/mypage/review/:mentoringId"
             element={
               <PrivateRoute isLogin={isLogin} isTutor={isTutor}>
-                <Review handleLogout={handleLogout} />
+                <Review handleLogout={handleLogout} setIsLogin={setIsLogin} />
               </PrivateRoute>
             }
           />
