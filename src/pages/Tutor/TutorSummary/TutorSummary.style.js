@@ -41,6 +41,21 @@ export const SummaryDetail = styled.div`
   }
 `
 
+export const CareerWrapper = styled.div`
+  color: #539955 !important;
+  font-weight: 700 !important;
+  line-height: 1.6em !important;
+  font-size: 1em !important;
+  margin-top: -0.1em !important;
+  word-break: auto-phrase;
+
+  font-weight: 700;
+  max-width: fit-content !important;
+  min-width: fit-content !important;
+  margin-right: 0em !important;
+  text-align: left !important;
+`
+
 export const SummaryProfile = styled.div`
   display: flex;
 `

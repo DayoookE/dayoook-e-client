@@ -26,7 +26,7 @@ export const TutorLevel = styled.div`
   font-size: 0.8em;
   div:nth-child(1) {
     font-weight: 700;
-    }
+  }
   div:nth-child(2) {
     font-weight: 500;
   }
@@ -40,7 +40,7 @@ export const TutorSchedule = styled.div`
   font-size: 0.8em;
   div:nth-child(1) {
     font-weight: 700;
-    }
+  }
   div:nth-child(2) {
     font-weight: 500;
   }
@@ -106,7 +106,7 @@ export const CardContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  background-color: #fff;
+  background-color: ${(props) => (props.isSelected ? '#f8fff8' : '#fff')};
   border-radius: 15px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
   width: 10em;
