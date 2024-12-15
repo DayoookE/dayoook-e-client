@@ -96,4 +96,6 @@ export const FairyListContainer = styled.div`
   overflow-x: auto;
   width: 100%;
   align-items: center;
+  justify-content: center;  // 가운데 정렬
+  gap: 50px;  // 아이템 간 간격 (선택사항)
 `

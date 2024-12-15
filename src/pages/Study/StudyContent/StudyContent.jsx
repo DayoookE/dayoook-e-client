@@ -9,24 +9,53 @@ import axios from "axios";
 
 
 export default function StudyContent({setPageState}) {
-    const [nationSelect, setNationSelect] = useState(1)
+    const [nationSelect, setNationSelect] = useState(0)
+    const [isLiked, setIsLiked] = useState(false)
     const [fairyTales, setFairytales] = useState()
 
     const fetchFairyTales = async (nationId) => {
         try {
             const token = localStorage.getItem('dayookeAccessToken');
             const countryId = typeof nationId === 'number' ? nationId : nationSelect
+            console.log(countryId)
             if (!token) {
                 console.error('No access token found');
                 return;
             }
-
             const response = await axios.get(
-                `${process.env.REACT_APP_SPRING_API_URL}/storybooks?countryId=${countryId}&page=1`,
+                `${process.env.REACT_APP_SPRING_API_URL}/storybooks`,
                 {
+                    params: {
+                        ...(countryId !== 0 && {countryId}),
+                        ...(isLiked && {liked: isLiked}),
+                        page: 1
+                    },
                     headers: {Authorization: `Bearer ${token}`},
                 }
             );
+            setFairytales(response?.data?.result?.content);
+
+        } catch (error) {
+            console.error('Failed to fetch fairy tales:', error);
+        }
+    }
+
+    const handleSearch = async (searchText) => {
+        const token = localStorage.getItem('dayookeAccessToken');
+        if (!token) {
+            console.error('No access token found');
+            return;
+        }
+        console.log(searchText);
+        if (searchText.trim() === '')
+            return;
+        try {
+            const response = await axios.get(
+                `${process.env.REACT_APP_SPRING_API_URL}/storybooks?title=${searchText}&page=1`,
+                {
+                    headers: {Authorization: `Bearer ${token}`},
+                }
+            )
             setFairytales(response?.data?.result?.content);
         } catch (error) {
             console.error('Failed to fetch fairy tales:', error);
@@ -35,7 +64,7 @@ export default function StudyContent({setPageState}) {
 
     useEffect(() => {
         fetchFairyTales();
-    }, [nationSelect])
+    }, [nationSelect, isLiked])
 
     return (
         <s.StudyContentWrapper>
@@ -52,6 +81,9 @@ export default function StudyContent({setPageState}) {
             <StudyOption
                 nationSelect={nationSelect}
                 setNationSelect={setNationSelect}
+                isLiked={isLiked}
+                setIsLiked={setIsLiked}
+                handleSearch={handleSearch}
             />
 
             {/* 동화책 리스트 */}
