@@ -17,7 +17,8 @@ export default function FairyRead({setIsLogin}) {
 
     const fairyTaleId = currentPath.substring(currentPath.lastIndexOf('/') + 1);
     // 기본값을 1로 설정
-    const [lastPageNumber, setLastPageNumber] = useState(location.state?.lastPageNumber || 1)
+    const [lastPageNumber] = useState(location.state?.lastPageNumber || 1)
+    const [languageCode] = useState(location.state?.languageCode || 'ko')
     const [fairyTaleDetails, setFairyTaleDetails] = useState()
 
     const fetchFairyTaleDetails = async (page) => {
@@ -55,7 +56,10 @@ export default function FairyRead({setIsLogin}) {
                 </s.MainMenuContainer>
 
                 {/* 동화 콘텐츠 */}
-                <FairyReadContent fontSize={fontSize} fetchFairyTaleDetails={fetchFairyTaleDetails} fairyTaleDetails={fairyTaleDetails} setFairyTaleDetails={setFairyTaleDetails}/>
+                <FairyReadContent fontSize={fontSize}
+                                  fairyTaleLanguageCode={languageCode}
+                                  fetchFairyTaleDetails={fetchFairyTaleDetails}
+                                  fairyTaleDetails={fairyTaleDetails}/>
 
                 {/* 동화 페이지 아래 부분 */}
                 <StudyBottom

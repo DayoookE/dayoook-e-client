@@ -1,18 +1,18 @@
 import {HeartIcon, SearchIcon} from '../../../../assets/Study'
-import {ChinaImg, KoreaImg, VietnamImg} from '../../../../assets/Study'
 import * as s from './StudyOption.style'
-import {useEffect, useState} from "react";
-import axios from "axios";
+import {useRef} from "react";
 import {useMapping} from "../../../../components/common/MappingContext";
+import {HeartWhite} from "../../../../assets/FairyList";
 
-export default function StudyOption({nationSelect, setNationSelect}) {
+export default function StudyOption({nationSelect, setNationSelect, isLiked, setIsLiked, handleSearch}) {
     const {countries} = useMapping();
+    const searchInputRef = useRef("");
 
     return (
         <s.OptionContainer>
             {/* 선호 버튼 */}
-            <s.CircleBtn heart>
-                <img src={HeartIcon} alt="heart"/>
+            <s.CircleBtn heart={isLiked} onClick={() => setIsLiked(!isLiked)}>
+                <img src={isLiked ? HeartIcon : HeartWhite} alt="heart"/>
             </s.CircleBtn>
 
             {/* 국가 선택 */}
@@ -23,13 +23,16 @@ export default function StudyOption({nationSelect, setNationSelect}) {
                         src={`${process.env.REACT_APP_S3_BUCKET}${nation.flagUrl}`}
                         alt={nation.name}
                         check={nationSelect === nation.id}
-                        onClick={() => setNationSelect(nation.id)}
+                        onClick={() => {
+                            const nationId = nation.id !== nationSelect ? nation.id : 0;
+                            setNationSelect(nationId)
+                        }}
                     />
                 ))}
             </s.NationSelectContainer>
 
             {/* 검색 버튼 */}
-            <s.CircleBtn search>
+            <s.CircleBtn search onClick={() => handleSearch(searchInputRef?.current?.value || "")}>
                 <img src={SearchIcon} alt="search"/>
             </s.CircleBtn>
         </s.OptionContainer>

@@ -1,9 +1,9 @@
-import React, {useState, useRef, useEffect} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import axios from 'axios'
 import * as s from './FairyReadContent.style'
 import FeedBackModal from '../FeedbackModal/FeedbackModal'
 
-export default function FairyReadContent({fontSize, fairyTaleDetails, fetchFairyTaleDetails}) {
+export default function FairyReadContent({fontSize, fairyTaleLanguageCode, fairyTaleDetails, fetchFairyTaleDetails}) {
     const [pageIdx, setPageIdx] = useState(1)
     const [isTransitioning, setIsTransitioning] = useState(false)
     const [recording, setRecording] = useState(false)
@@ -11,6 +11,8 @@ export default function FairyReadContent({fontSize, fairyTaleDetails, fetchFairy
     const mediaRecorderRef = useRef(null)
     const audioChunksRef = useRef([])
     const [feedback, setFeedback] = useState('다육이가 발음 교정을 시작합니다 ✨')
+    const [, setSrcContent] = useState('')
+    const translationsRef = useRef({});
     const [modalIsOpen, setIsOpen] = useState(false)
 
     const fetchPageUpdate = async (page) => {
@@ -37,8 +39,47 @@ export default function FairyReadContent({fontSize, fairyTaleDetails, fetchFairy
                 }
             );
         }
+        setSrcContent(fairyTaleDetails.content);
 
     }
+
+    const fetchTranslateText = async () => {
+        const bookId = fairyTaleDetails?.id;
+        console.log(`Book ID: ${bookId}, language code: ${fairyTaleLanguageCode}`)
+        if (!translationsRef.current[bookId]) {
+            translationsRef.current[bookId] = {};
+        }
+
+        if (!translationsRef.current[bookId][pageIdx]) {
+            translationsRef.current[bookId][pageIdx] = {};
+        }
+
+        if (translationsRef.current[bookId][pageIdx][fairyTaleLanguageCode]) {
+            return translationsRef.current[bookId][pageIdx][fairyTaleLanguageCode];
+        }
+        try {
+            const response = await axios.post(
+                `${process.env.REACT_APP_PAPAGO_API_URL}`,
+                {
+                    source: 'auto',
+                    target: fairyTaleLanguageCode,
+                    text: fairyTaleDetails.content
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-NCP-APIGW-API-KEY-ID': process.env.REACT_APP_PAPAGO_CLIENT_ID,
+                        'X-NCP-APIGW-API-KEY': process.env.REACT_APP_PAPAGO_CLIENT_SECRET
+                    }
+                }
+            );
+            translationsRef.current[bookId][pageIdx][fairyTaleLanguageCode] = response.message.result.translatedText;
+            console.log("PAPAGO: ", response.message.result.translatedText)
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
 
     useEffect(() => {
         if (audioURL) {
@@ -48,8 +89,9 @@ export default function FairyReadContent({fontSize, fairyTaleDetails, fetchFairy
     }, [audioURL])
 
     useEffect(() => {
-        fetchFairyTaleDetails(pageIdx)
+        fetchFairyTaleDetails(pageIdx);
         fetchPageUpdate(pageIdx);
+        fetchTranslateText();
     }, [pageIdx])
 
     const startRecording = async () => {
@@ -264,7 +306,7 @@ export default function FairyReadContent({fontSize, fairyTaleDetails, fetchFairy
             </s.BookContentContainer>
 
             <s.TranslationContainer>
-                宇和智女在一起的景象就像是一幅美丽的画。
+
             </s.TranslationContainer>
         </s.ReadContent>
     )

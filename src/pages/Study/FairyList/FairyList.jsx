@@ -23,6 +23,15 @@ const genTitleColor = () => {
     return colors[randomIdx];
 }
 
+const getLanguageCode = (nationId) => {
+    const languageMapping = {
+        1: 'ko',
+        2: 'zh-CN',
+        3: 'vi',
+    }
+    return languageMapping[nationId] || 'ko'
+}
+
 export default function FairyList({setPageState, nationSelect, fairyTales, fetchFairyTales}) {
     const navigate = useNavigate();
     const handleLikeToggle = async (storybookId) => {
@@ -55,7 +64,10 @@ export default function FairyList({setPageState, nationSelect, fairyTales, fetch
                         <s.FairyBookCover
                             onClick={() => navigate(
                                 `/study/fairyread/${fairy.id}`, {
-                                    state: {lastPageNumber: fairy.lastPageNumber}
+                                    state: {
+                                        lastPageNumber: fairy.lastPageNumber,
+                                        languageCode: getLanguageCode(nationSelect)
+                                    }
                                 }
                             )}
                             percent={((fairy.lastPageNumber - 0) / fairy.pageCount) * 100}>
