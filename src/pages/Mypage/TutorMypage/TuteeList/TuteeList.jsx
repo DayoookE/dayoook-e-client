@@ -60,9 +60,10 @@ export default function TuteeList() {
     <s.MyTuteeWrapper>
       <s.Title>✏️&nbsp;&nbsp;나의 튜티</s.Title>
       <s.ListWrapper>
-        {tuteeList.map((tutee) => (
-          <TuteeItem tutee={tutee} />
-        ))}
+        {tuteeList &&
+          tuteeList.map((tutee) =>
+            tutee.status === 'APPROVED' ? <TuteeItem tutee={tutee} /> : null
+          )}
       </s.ListWrapper>
     </s.MyTuteeWrapper>
   )
