@@ -8,7 +8,7 @@ export default function MenuBar({ userInfo }) {
 
   return (
     <s.MenuBarContainer>
-      {/* <Lang isStudy={isStudy} /> */}
+      <Lang isStudy={isStudy} />
       <Alarm isStudy={isStudy} navigate={navigate} />
       <Profile isStudy={isStudy} userInfo={userInfo} navigate={navigate} />
     </s.MenuBarContainer>
