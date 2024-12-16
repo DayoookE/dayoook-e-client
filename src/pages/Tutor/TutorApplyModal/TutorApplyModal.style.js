@@ -17,7 +17,7 @@ export const customStyles = {
     padding: '2.5em 3em 3em 3em',
     width: '25%',
     height: '50%',
-    maxWidth: '50%',
+    maxWidth: '70%',
     width: 'fit-width',
     minWidth: '40%',
     height: 'fit-content',
@@ -92,7 +92,7 @@ export const ModalTitle = styled.div`
 
 export const ApplyTextArea = styled.textarea`
   width: 100%;
-  height: 100px;
+  height: 3em;
   border: none;
   background-color: #fff9c4;
   resize: none;
@@ -107,3 +107,61 @@ export const ApplyTextArea = styled.textarea`
     outline: none;
   }
 `
+
+export const TimeItem = styled.div`
+  align-content: center;
+  padding: 0.7em 0.5em;
+  border-radius: 10px;
+  cursor: ${(props) => (props.isAvailable ? 'pointer' : 'not-allowed')};
+  font-weight: bold;
+  text-align: center;
+  background-color: ${(props) =>
+    props.isSelect ? '#89ce88' : props.isAvailable ? '#fff' : '#f0f0f0'};
+  color: ${(props) =>
+    props.isSelect ? '#fff' : props.isAvailable ? '#525252' : '#b0b0b0'};
+  box-shadow: ${(props) =>
+    props.isAvailable && !props.isSelect ? 'inset 0 0 0 2px #f0f0f0' : 'none'};
+  &:hover {
+    background-color: ${(props) => (props.isAvailable ? '#def8de' : '#f0f0f0')};
+    box-shadow: ${(props) =>
+      props.isAvailable ? 'inset 0 0 0 2px #def8de' : 'none'};
+  }
+  &:active {
+    background-color: ${(props) => (props.isAvailable ? '#c7f0c7' : '#e0e0e0')};
+    box-shadow: ${(props) =>
+      props.isAvailable ? 'inset 0 0 0 2px #c7f0c7' : 'none'};
+  }
+`
+
+export const TimeWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5em;
+`
+
+export const DayItem = styled.div`
+  padding: 0.5em 0.5em;
+  border-radius: 10px;
+  font-size: 1.1em;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+  background-color: ${(props) => (props.isSelect ? '#ff9797' : '#fff')};
+  color: ${(props) => (props.isSelect ? '#fff' : '#525252')};
+
+  &:hover {
+    background-color: ${(props) => (props.isSelect ? '#ff7f7f' : '#f0f0f0')};
+  }
+  &:active {
+    background-color: ${(props) => (props.isSelect ? '#ff6b6b' : '#e0e0e0')};
+  }
+`
+
+export const DayWrapper = styled.div`
+  display: flex;
+  gap: 0.5em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+`
+
+export const DaySelectWrapper = styled.div``
