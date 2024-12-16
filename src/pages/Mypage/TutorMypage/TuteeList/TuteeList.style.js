@@ -90,3 +90,11 @@ export const Title = styled.div`
   font-weight: bold;
   margin-bottom: 0.3em;
 `
+
+export const RoomUrlImg = styled.img`
+  width: 1.2em !important;
+  height: 1.2em !important;
+  border-radius: 0 !important;
+  margin-left: 0.5em !important;
+  cursor: pointer !important;
+`
