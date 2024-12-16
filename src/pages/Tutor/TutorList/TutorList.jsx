@@ -143,7 +143,7 @@ const Card = forwardRef(({ card, onSelect, idx, selectedTutor }, ref) => {
     }
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (dayId, timeSlotId) => {
     try {
       const token = localStorage.getItem('dayookeAccessToken')
       if (!token) {
@@ -156,8 +156,8 @@ const Card = forwardRef(({ card, onSelect, idx, selectedTutor }, ref) => {
           tutorId: card.id,
           timeSlots: [
             {
-              dayId: 4,
-              timeSlotId: 9,
+              dayId: dayId,
+              timeSlotId: timeSlotId,
             },
           ],
           message,

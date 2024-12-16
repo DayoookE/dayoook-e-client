@@ -42,7 +42,7 @@ export default function TutorSummary({ selectedTutor }) {
     fetchTutorDetail()
   }, [selectedTutor])
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (dayId, timeSlotId) => {
     try {
       const token = localStorage.getItem('dayookeAccessToken')
       if (!token) {
@@ -56,8 +56,8 @@ export default function TutorSummary({ selectedTutor }) {
           tutorId: selectedTutor.id,
           timeSlots: [
             {
-              dayId: 4,
-              timeSlotId: 9,
+              dayId: dayId,
+              timeSlotId: timeSlotId,
             },
           ],
           message,
