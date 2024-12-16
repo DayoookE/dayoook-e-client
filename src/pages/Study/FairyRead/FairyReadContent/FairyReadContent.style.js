@@ -28,6 +28,11 @@ export const ReadBtn = styled.div`
 export const BookText = styled.div`
   font-size: ${(props) => props.fontSize}em;
   font-weight: bold;
+
+  padding: 0.1em 0.3em;
+  border-radius: 10px;
+  background: #00000090;
+  color: #ebebeb;
 `
 
 export const BookTextWrapper = styled.div`
