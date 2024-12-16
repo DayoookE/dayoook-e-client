@@ -19,7 +19,10 @@ export default function Tutor({ setIsLogin }) {
     <ms.MainContainer>
       <NavBar setIsLogin={setIsLogin} />
       <ms.Content style={{ maxWidth: 'calc(100vw - 11.2em)' }}>
-        <TutorMenu setIsRecommend={setIsRecommend} />
+        <TutorMenu
+          setIsRecommend={setIsRecommend}
+          setRecommendTutors={setRecommendTutors}
+        />
         <s.TutorListContainer>
           <ms.Title>튜터 목록</ms.Title>
           <s.TutorListContent>
