@@ -72,7 +72,8 @@ export default function TutorSummary({ selectedTutor }) {
     } catch (error) {
       console.error('Error applying tutor:', error)
       alert(
-        '😢 튜티 신청에 실패했습니다.\n가능한 시간을 확인하여 다시 시도해주세요. 😢'
+        '😢 튜티 신청에 실패했습니다.\n가능한 시간을 확인하여 다시 시도해주세요. 😢\n\n세부 오류 내용 : ' +
+          (error.response?.data?.message || '가능한 시간대를 확인해주세요.')
       )
     } finally {
       setIsOpen(false)
