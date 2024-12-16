@@ -12,7 +12,7 @@ export default function FairyReadContent({fontSize, fairyTaleLanguageCode, fairy
     const audioChunksRef = useRef([])
     const [feedback, setFeedback] = useState('다육이가 발음 교정을 시작합니다 ✨')
     const [, setSrcContent] = useState('')
-    const translationsRef = useRef({});
+    const [translatedText, setTranslatedText] = useState('');
     const [modalIsOpen, setIsOpen] = useState(false)
 
     const fetchPageUpdate = async (page) => {
@@ -44,37 +44,26 @@ export default function FairyReadContent({fontSize, fairyTaleLanguageCode, fairy
     }
 
     const fetchTranslateText = async () => {
+        const token = localStorage.getItem('dayookeAccessToken');
+        if (!token) {
+            console.error('No access token found');
+            return;
+        }
         const bookId = fairyTaleDetails?.id;
         console.log(`Book ID: ${bookId}, language code: ${fairyTaleLanguageCode}`)
-        if (!translationsRef.current[bookId]) {
-            translationsRef.current[bookId] = {};
-        }
-
-        if (!translationsRef.current[bookId][pageIdx]) {
-            translationsRef.current[bookId][pageIdx] = {};
-        }
-
-        if (translationsRef.current[bookId][pageIdx][fairyTaleLanguageCode]) {
-            return translationsRef.current[bookId][pageIdx][fairyTaleLanguageCode];
-        }
         try {
             const response = await axios.post(
-                `${process.env.REACT_APP_PAPAGO_API_URL}`,
+                `${process.env.REACT_APP_SPRING_API_URL}/papago/translate`,
                 {
                     source: 'auto',
                     target: fairyTaleLanguageCode,
                     text: fairyTaleDetails.content
                 },
                 {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-NCP-APIGW-API-KEY-ID': process.env.REACT_APP_PAPAGO_CLIENT_ID,
-                        'X-NCP-APIGW-API-KEY': process.env.REACT_APP_PAPAGO_CLIENT_SECRET
-                    }
+                    headers: {Authorization: `Bearer ${token}`},
                 }
             );
-            translationsRef.current[bookId][pageIdx][fairyTaleLanguageCode] = response.message.result.translatedText;
-            console.log("PAPAGO: ", response.message.result.translatedText)
+            setTranslatedText(response?.data.result.translatedText);
         } catch (error) {
             console.error(error);
         }
@@ -254,7 +243,6 @@ export default function FairyReadContent({fontSize, fairyTaleLanguageCode, fairy
                 <s.BookContentContainer>
                     <s.BookTextWrapper>
                         <div>Loading...</div>
-
                     </s.BookTextWrapper>
                 </s.BookContentContainer>
             </s.ReadContent>
@@ -306,7 +294,9 @@ export default function FairyReadContent({fontSize, fairyTaleLanguageCode, fairy
             </s.BookContentContainer>
 
             <s.TranslationContainer>
-
+                {
+                    translatedText
+                }
             </s.TranslationContainer>
         </s.ReadContent>
     )
