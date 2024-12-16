@@ -20,9 +20,9 @@ export const TutorName = styled.div`
 
 export const TutorLevel = styled.div`
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 65%;
   font-size: 0.8em;
   div:nth-child(1) {
     font-weight: 700;
@@ -48,9 +48,9 @@ export const TutorSchedule = styled.div`
 
 export const TuteeAge = styled.div`
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 65%;
   font-size: 0.8em;
   div:nth-child(1) {
     font-weight: 700;
