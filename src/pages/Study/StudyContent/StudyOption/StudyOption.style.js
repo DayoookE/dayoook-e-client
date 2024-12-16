@@ -34,7 +34,7 @@ export const CircleBtn = styled.div`
 
   &:hover {
     background-color: ${(props) =>
-      props.heart ? '#FF6B6B' : props.search ? '#4CAE4C' : '#fff'};
+      props.heart ? '#FF6B6B' : props.search ? '#4CAE4C' : '#fff3f3'};
   }
 
   &:active {
