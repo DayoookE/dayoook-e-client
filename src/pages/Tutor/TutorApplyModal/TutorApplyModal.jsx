@@ -19,6 +19,8 @@ export default function TutorApplyModal({
   const [selectedTime, setSelectedTime] = useState(1)
 
   useEffect(() => {
+    setSelectedDay(null)
+    setSelectedTime(null)
     const fetchSchedule = async () => {
       if (card.id) {
         // get /tutors/schedule/:tutorId
@@ -78,8 +80,17 @@ export default function TutorApplyModal({
               }
               isSelect={selectedTime === idx + 1 && selectedDay === dayId}
               onClick={() => {
-                setSelectedDay(dayId)
-                setSelectedTime(idx + 1)
+                if (
+                  schedule.find(
+                    (item) =>
+                      item.day.id === dayId &&
+                      item.timeSlot.id === idx + 1 &&
+                      item.isAvailable
+                  )
+                ) {
+                  setSelectedDay(dayId)
+                  setSelectedTime(idx + 1)
+                }
               }}
             >
               {time}
