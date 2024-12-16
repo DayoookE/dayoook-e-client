@@ -17,147 +17,149 @@ import { StarIcon } from '../../../assets/icon'
 
 const getLevelName = (level) => {
   const levelMapping = {
-    SEEDLING: "새싹",
-    STEM: "줄기",
-    LEAF: "잎",
-    FLOWER: "꽃",
-    FRUIT: "열매",
-  };
-  return levelMapping[level] || "알 수 없음";
-};
+    SEEDLING: '새싹',
+    STEM: '줄기',
+    LEAF: '잎',
+    FLOWER: '꽃',
+    FRUIT: '열매',
+  }
+  return levelMapping[level] || '알 수 없음'
+}
 
 const getLanguage = (language) => {
   const languageMapping = {
-    "대한민국": "🇰🇷",
-    "중국": "🇨🇳",
-    "베트남": "🇻🇳",
-    "영어": "🇺🇸",
-    "러시아": "🇷🇺",
-    "필리핀": "🇵🇭",
-  };
-  return languageMapping[language] || "🇰🇷";
-};
-
-const ProgressProvider = ({ valueStart, valueEnd, children }) => {
-  const [value, setValue] = useState(valueStart);
-  useEffect(() => {
-    setValue(valueEnd);
-  }, [valueEnd]);
-
-  return children(value);
-};
-
-export default function MyInfo({ userInfo }) {
-  const isTutor = userInfo?.role === 'TUTOR';
-
-  return (
-      <s.MyInfoContainer isTutor={isTutor}>
-        {/* 유저 정보 상단바 */}
-        <s.MyInfoTitleWrapper>
-          <s.Title>나의 정보</s.Title>
-          <img src={SetInfoIcon} alt="설정" />
-        </s.MyInfoTitleWrapper>
-
-        {/* 유저 프로필 */}
-        {isTutor ? (
-            <TutorProfileWrapper>
-              <img src={MyImgIcon} alt="프로필" />
-            </TutorProfileWrapper>
-        ) : (
-            <s.ProfileWrapper>
-              <img src={ MyImgIcon} alt="프로필" />
-              <ProgressProvider valueStart={0} valueEnd={userInfo?.attendanceRate || 0}>
-                {(value) => (
-                    <CircularProgressbar
-                        value={value}
-                        strokeWidth={6}
-                        styles={buildStyles({
-                          pathColor: '#6ED372',
-                          trailColor: 'none',
-                        })}
-                    />
-                )}
-              </ProgressProvider>
-            </s.ProfileWrapper>
-        )}
-
-        {/* 유저 이름 */}
-        {isTutor ? (
-            <s.MyInfoNameWrapper isTutor={isTutor}>
-              <s.MyName>{userInfo?.name || '튜터'}</s.MyName>
-              <div>튜터</div>
-            </s.MyInfoNameWrapper>
-        ) : (
-            <s.MyInfoNameWrapper>
-              <img src={SproutIcon} alt="새싹" />
-              <div>
-                <s.MyName>{userInfo?.name || '학생'}</s.MyName>
-                <div>{getLevelName(userInfo?.level) + ' 학생' || '새싹 학생'}</div>
-              </div>
-            </s.MyInfoNameWrapper>
-        )}
-
-        {isTutor ? (
-            <TutorDetailInfoContainer>
-              {/* 하드코딩된 튜터 상세 정보 */}
-              {tutorDetailInfo.map((info, idx) => (
-                  <TutorDetailItem key={idx} type={info.title}>
-                    <div>{info.title}</div>
-                    <div>
-                      {info.title === '튜터 소개'
-                          ? info.content.split('\n').map((line, idx) => (
-                              <span key={idx}>
-                        {line}
-                                <br />
-                      </span>
-                          ))
-                          : info.title === '튜터 평점'
-                              ? Array.from({ length: info.content }, (_, idx) => (
-                                  <img key={idx} src={StarIcon} alt="별" />
-                              ))
-                              : info.title === '경력'
-                                  ? info.content.map((line, idx) => (
-                                      <span key={idx}>
-                        {line}
-                                        <br />
-                      </span>
-                                  ))
-                                  : info.content}
-                    </div>
-                  </TutorDetailItem>
-              ))}
-            </TutorDetailInfoContainer>
-        ) : (
-            <>
-              {/* 유저 상세 정보 */}
-              <s.DetailInfoWrapper>
-                <s.DetailInfoContainer>
-                  <img src={GradeInfo} alt="학년" />
-                  <div>{userInfo?.age || '학년 정보 없음'}</div>
-                </s.DetailInfoContainer>
-                <s.DetailInfoContainer tutor>
-                  <img src={TutorIcon} alt="튜터" />
-                  <div>{userInfo?.mentor || '튜터 정보 없음'}</div>
-                </s.DetailInfoContainer>
-              </s.DetailInfoWrapper>
-
-              {/* 마이페이지 버튼 */}
-              <s.MypageBtnWrapper>
-                <s.MypageBtn mypage>
-                  <img src={MypageWhiteIcon} alt="마이페이지" />
-                  <div>마이페이지</div>
-                </s.MypageBtn>
-                <s.MypageBtn dashboard>
-                  <img src={DashboardGreen} alt="대시보드" />
-                  <div>대시보드</div>
-                </s.MypageBtn>
-              </s.MypageBtnWrapper>
-            </>
-        )}
-      </s.MyInfoContainer>
-  );
+    대한민국: '🇰🇷',
+    중국: '🇨🇳',
+    베트남: '🇻🇳',
+    영어: '🇺🇸',
+    러시아: '🇷🇺',
+    필리핀: '🇵🇭',
+  }
+  return languageMapping[language] || '🇰🇷'
 }
 
+const ProgressProvider = ({ valueStart, valueEnd, children }) => {
+  const [value, setValue] = useState(valueStart)
+  useEffect(() => {
+    setValue(valueEnd)
+  }, [valueEnd])
+
+  return children(value)
+}
+
+export default function MyInfo({ userInfo }) {
+  const isTutor = localStorage.getItem('dayookeUserRole') === 'TUTOR'
+
+  return (
+    <s.MyInfoContainer isTutor={isTutor}>
+      {/* 유저 정보 상단바 */}
+      <s.MyInfoTitleWrapper>
+        <s.Title>나의 정보</s.Title>
+        <img src={SetInfoIcon} alt="설정" />
+      </s.MyInfoTitleWrapper>
+
+      {/* 유저 프로필 */}
+      {isTutor ? (
+        <TutorProfileWrapper>
+          <img src={MyImgIcon} alt="프로필" />
+        </TutorProfileWrapper>
+      ) : (
+        <s.ProfileWrapper>
+          <img src={MyImgIcon} alt="프로필" />
+          <ProgressProvider
+            valueStart={0}
+            valueEnd={userInfo?.attendanceRate || 0}
+          >
+            {(value) => (
+              <CircularProgressbar
+                value={value}
+                strokeWidth={6}
+                styles={buildStyles({
+                  pathColor: '#6ED372',
+                  trailColor: 'none',
+                })}
+              />
+            )}
+          </ProgressProvider>
+        </s.ProfileWrapper>
+      )}
+
+      {/* 유저 이름 */}
+      {isTutor ? (
+        <s.MyInfoNameWrapper isTutor={isTutor}>
+          <s.MyName>{userInfo?.name || '튜터'}</s.MyName>
+          <div>튜터</div>
+        </s.MyInfoNameWrapper>
+      ) : (
+        <s.MyInfoNameWrapper>
+          <img src={SproutIcon} alt="새싹" />
+          <div>
+            <s.MyName>{userInfo?.name || '학생'}</s.MyName>
+            <div>{getLevelName(userInfo?.level) + ' 학생' || '새싹 학생'}</div>
+          </div>
+        </s.MyInfoNameWrapper>
+      )}
+
+      {isTutor ? (
+        <TutorDetailInfoContainer>
+          {/* 하드코딩된 튜터 상세 정보 */}
+          {tutorDetailInfo.map((info, idx) => (
+            <TutorDetailItem key={idx} type={info.title}>
+              <div>{info.title}</div>
+              <div>
+                {info.title === '튜터 소개'
+                  ? info.content.split('\n').map((line, idx) => (
+                      <span key={idx}>
+                        {line}
+                        <br />
+                      </span>
+                    ))
+                  : info.title === '튜터 평점'
+                  ? Array.from({ length: info.content }, (_, idx) => (
+                      <img key={idx} src={StarIcon} alt="별" />
+                    ))
+                  : info.title === '경력'
+                  ? info.content.map((line, idx) => (
+                      <span key={idx}>
+                        {line}
+                        <br />
+                      </span>
+                    ))
+                  : info.content}
+              </div>
+            </TutorDetailItem>
+          ))}
+        </TutorDetailInfoContainer>
+      ) : (
+        <>
+          {/* 유저 상세 정보 */}
+          <s.DetailInfoWrapper>
+            <s.DetailInfoContainer>
+              <img src={GradeInfo} alt="학년" />
+              <div>{userInfo?.age || '학년 정보 없음'}</div>
+            </s.DetailInfoContainer>
+            <s.DetailInfoContainer tutor>
+              <img src={TutorIcon} alt="튜터" />
+              <div>{userInfo?.mentor || '튜터 정보 없음'}</div>
+            </s.DetailInfoContainer>
+          </s.DetailInfoWrapper>
+
+          {/* 마이페이지 버튼 */}
+          <s.MypageBtnWrapper>
+            <s.MypageBtn mypage>
+              <img src={MypageWhiteIcon} alt="마이페이지" />
+              <div>마이페이지</div>
+            </s.MypageBtn>
+            <s.MypageBtn dashboard>
+              <img src={DashboardGreen} alt="대시보드" />
+              <div>대시보드</div>
+            </s.MypageBtn>
+          </s.MypageBtnWrapper>
+        </>
+      )}
+    </s.MyInfoContainer>
+  )
+}
 
 const TutorDetailItem = styled.div`
   display: flex;
