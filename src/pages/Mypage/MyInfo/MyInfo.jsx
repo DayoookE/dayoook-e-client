@@ -5,6 +5,7 @@ import {
   GradeInfo,
   MyImgIcon,
   MypageWhiteIcon,
+  PointNewIcon,
   SetInfoIcon,
   TutorIcon,
 } from '../../../assets/Mypage'
@@ -52,6 +53,8 @@ export default function MyInfo() {
   const isTutor = localStorage.getItem('dayookeUserRole') === 'TUTOR'
   const [userInfo, setUserInfo] = useState(null)
   const [userDetail, setUserDetail] = useState(null)
+
+  console.log('test : ', userInfo)
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -189,11 +192,11 @@ export default function MyInfo() {
           <s.DetailInfoWrapper>
             <s.DetailInfoContainer>
               <img src={GradeInfo} alt="학년" />
-              <div>{userInfo?.age || '학년 정보 없음'}</div>
+              <div>{userInfo?.age || '학년 정보 없음'}살</div>
             </s.DetailInfoContainer>
             <s.DetailInfoContainer tutor>
-              <img src={TutorIcon} alt="튜터" />
-              <div>{userInfo?.mentor || '튜터 정보 없음'}</div>
+              <img src={PointNewIcon} alt="포인트" />
+              <div>{userInfo?.point || '0'} 포인트</div>
             </s.DetailInfoContainer>
           </s.DetailInfoWrapper>
 
