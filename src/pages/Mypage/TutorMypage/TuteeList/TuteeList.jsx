@@ -127,7 +127,7 @@ const TuteeItem = ({ tutee }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       )
-      console.log('response:', response)
+      console.log('enter response:', response)
       startRecording()
       alert(
         '👏 수업이 시작되었습니다 !\n수업을 종료하시려면 꼭 다시 클릭해주세요 💪'
@@ -155,7 +155,8 @@ const TuteeItem = ({ tutee }) => {
         }
       )
       .then((response) => {
-        console.log('response:', response)
+        console.log('exit response:', response)
+        uploadRecords()
       })
       .catch((error) => {
         console.error('Error exiting class:', error)
@@ -260,6 +261,90 @@ const TuteeItem = ({ tutee }) => {
     }
 
     return wavBuffer
+  }
+
+  // POST /speech/{lesson_schedule_id}/upload
+  const uploadRecords = async () => {
+    const token = localStorage.getItem('dayookeAccessToken')
+
+    // const response = await fetch(audioURL)
+    const response = await fetch('/testContent.wav')
+    const blob = await response.blob() // URL에서 Blob 가져오기
+
+    const formData = new FormData()
+    formData.append('file', blob, 'file.wav') // Blob 추가
+
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_FAST_API_URL}/speech/${sdlessonId}/upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      )
+      console.log('uploadRecords response:', response)
+      makeDialogue()
+    } catch (error) {
+      console.error('Error uploading records:', error)
+    }
+  }
+
+  // POST /speech/{lesson_schedule_id}/transcription
+  const makeDialogue = async () => {
+    const token = localStorage.getItem('dayookeAccessToken')
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_FAST_API_URL}/speech/${sdlessonId}/transcription`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      console.log('makeDialogue response:', response)
+      createChat()
+      createReview()
+    } catch (error) {
+      console.error('Error making dialogue:', error)
+    }
+  }
+
+  // POST /chat/{lesson_scehdule_id}
+  const createChat = async () => {
+    const token = localStorage.getItem('dayookeAccessToken')
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_FAST_API_URL}/chat/${sdlessonId}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      console.log('createChat response:', response)
+    } catch (error) {
+      console.error('Error creating chat:', error)
+    }
+  }
+
+  // POST /review/{lesson_schedule_id}
+  const createReview = async () => {
+    const token = localStorage.getItem('dayookeAccessToken')
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_FAST_API_URL}/review/${sdlessonId}`,
+        {
+          lesson_schedule_id: sdlessonId,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      console.log('createReview response:', response)
+    } catch (error) {
+      console.error('Error creating review:', error)
+    }
   }
 
   return (
