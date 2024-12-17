@@ -31,11 +31,48 @@ export default function Login({ setIsLogin, setIsTutor }) {
 
       setIsLogin(true)
       setIsTutor(role === 'TUTOR')
-
+      if (response.data.result.role === 'TUTEE') {
+        createNewChatAssistant(response.data.result.accessToken)
+        createNewReviewAssistant(response.data.result.accessToken)
+      }
       navigate('/')
     } catch (error) {
       console.error('로그인 실패:', error)
       setError('이메일 또는 비밀번호가 올바르지 않습니다.')
+    }
+  }
+
+  const createNewChatAssistant = async (token) => {
+    //  get /chat/create
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_FAST_API_URL}/chat/create`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      console.log('채팅 어시스턴트 생성 성공:', response)
+    } catch (error) {
+      console.error('채팅 어시스턴트 생성 실패:', error)
+    }
+  }
+
+  const createNewReviewAssistant = async (token) => {
+    //  get /review/create
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_FAST_API_URL}/review/create`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      console.log('리뷰 어시스턴트 생성 성공:', response)
+    } catch (error) {
+      console.error('리뷰 어시스턴트 생성 실패:', error)
     }
   }
 
