@@ -54,8 +54,6 @@ export default function MyInfo() {
   const [userInfo, setUserInfo] = useState(null)
   const [userDetail, setUserDetail] = useState(null)
 
-  console.log('test : ', userInfo)
-
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
