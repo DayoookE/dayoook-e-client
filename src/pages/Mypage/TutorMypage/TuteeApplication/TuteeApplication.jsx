@@ -33,23 +33,23 @@ export default function TuteeApplication() {
     fetchUserInfo()
   }, [])
 
+  const fetchTuteeList = async () => {
+    const token = localStorage.getItem('dayookeAccessToken')
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_SPRING_API_URL}/tutors/application/${userInfo.id}?page=1`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      console.log('response:', response)
+      setTuteeList(response?.data?.result.content || [])
+    } catch (error) {
+      console.error('Error fetching tutee list:', error)
+    }
+  }
   // 신청 튜티 목록
   useEffect(() => {
-    const token = localStorage.getItem('dayookeAccessToken')
-    const fetchTuteeList = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_SPRING_API_URL}/tutors/application/${userInfo.id}?page=1`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        )
-        console.log('response:', response)
-        setTuteeList(response?.data?.result.content || [])
-      } catch (error) {
-        console.error('Error fetching tutee list:', error)
-      }
-    }
     fetchTuteeList()
   }, [userInfo])
 
@@ -59,14 +59,16 @@ export default function TuteeApplication() {
       <s.ListWrapper>
         {tuteeList &&
           tuteeList.map((tutee) =>
-            tutee.status === 'APPLYING' ? <TuteeItem tutee={tutee} /> : null
+            tutee.status === 'APPLYING' ? (
+              <TuteeItem tutee={tutee} fetchTuteeList={fetchTuteeList} />
+            ) : null
           )}
       </s.ListWrapper>
     </s.MyTuteeWrapper>
   )
 }
 
-const TuteeItem = ({ tutee }) => {
+const TuteeItem = ({ tutee, fetchTuteeList }) => {
   // 신청 승인
   const handleAccept = async () => {
     const token = localStorage.getItem('dayookeAccessToken')
@@ -80,6 +82,7 @@ const TuteeItem = ({ tutee }) => {
         }
       )
       alert('승인되었습니다 🎉')
+      fetchTuteeList()
     } catch (error) {
       console.error('Error accepting tutee:', error)
       alert('승인에 실패했습니다 😢')
