@@ -3,6 +3,8 @@ import { SproutIcon } from '../../../assets/level'
 import ProfilePopup from './ProfilePopup/ProfilePopup'
 import * as s from '../MenuBar.style'
 import * as ps from './Profile.style'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 // 등급 매핑 함수
 const getLevelName = (level) => {
@@ -17,9 +19,40 @@ const getLevelName = (level) => {
 }
 
 export default function Profile({ isStudy, userInfo, navigate }) {
-  if (!userInfo) return null // userInfo가 없으면 아무것도 렌더링하지 않음
+  const [name, setName] = useState('')
+  const [level, setLevel] = useState('')
+  const [profileUrl, setProfileUrl] = useState('')
 
-  const { name, level, profileUrl } = userInfo
+  // users/info
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const token = localStorage.getItem('dayookeAccessToken')
+        if (!token) {
+          setName(null)
+          setLevel(null)
+          setProfileUrl(null)
+          return
+        }
+        const response = await axios.get(
+          `${process.env.REACT_APP_SPRING_API_URL}/users/info`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+        setName(response.data.result.name)
+        setLevel(response.data.result.level)
+        setProfileUrl(response.data.result.profileUrl)
+      } catch (error) {
+        console.error('유저 정보 조회 실패:', error)
+        setName(null)
+        setLevel(null)
+        setProfileUrl(null)
+      }
+    }
+    fetchUserInfo()
+  }, [])
+
   const levelName = getLevelName(level)
 
   return (
