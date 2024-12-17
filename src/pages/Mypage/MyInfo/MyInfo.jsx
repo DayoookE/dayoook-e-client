@@ -5,6 +5,7 @@ import {
   GradeInfo,
   MyImgIcon,
   MypageWhiteIcon,
+  PointNewIcon,
   SetInfoIcon,
   TutorIcon,
 } from '../../../assets/Mypage'
@@ -14,6 +15,7 @@ import * as s from './MyInfo.style'
 import styled from 'styled-components'
 import { Face1 } from '../../../assets/face'
 import { StarIcon } from '../../../assets/icon'
+import axios from 'axios'
 
 const getLevelName = (level) => {
   const levelMapping = {
@@ -47,8 +49,57 @@ const ProgressProvider = ({ valueStart, valueEnd, children }) => {
   return children(value)
 }
 
-export default function MyInfo({ userInfo }) {
+export default function MyInfo() {
   const isTutor = localStorage.getItem('dayookeUserRole') === 'TUTOR'
+  const [userInfo, setUserInfo] = useState(null)
+  const [userDetail, setUserDetail] = useState(null)
+
+  console.log('test : ', userInfo)
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const token = localStorage.getItem('dayookeAccessToken')
+        if (!token) {
+          setUserInfo(null)
+          return
+        }
+        const response = await axios.get(
+          `${process.env.REACT_APP_SPRING_API_URL}/users/info`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+        setUserInfo(response.data.result)
+        if (response.data.result.role === 'TUTOR') {
+          fetchTutorInfo(response.data.result.id)
+        }
+      } catch (error) {
+        console.error('유저 정보 조회 실패:', error)
+        setUserInfo(null)
+      }
+    }
+    fetchUserInfo()
+  }, [])
+
+  // get /tutors/{tutorId}
+  const fetchTutorInfo = async (tutorId) => {
+    try {
+      const token = localStorage.getItem('dayookeAccessToken')
+      if (!token) {
+        return
+      }
+      const response = await axios.get(
+        `${process.env.REACT_APP_SPRING_API_URL}/tutors/${tutorId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      setUserDetail(response.data.result)
+    } catch (error) {
+      console.error('튜터 정보 조회 실패:', error)
+    }
+  }
 
   return (
     <s.MyInfoContainer isTutor={isTutor}>
@@ -108,24 +159,29 @@ export default function MyInfo({ userInfo }) {
               <div>{info.title}</div>
               <div>
                 {info.title === '튜터 소개'
-                  ? info.content.split('\n').map((line, idx) => (
+                  ? userDetail?.introduction?.split('\n').map((line, idx) => (
                       <span key={idx}>
                         {line}
                         <br />
                       </span>
                     ))
                   : info.title === '튜터 평점'
-                  ? Array.from({ length: info.content }, (_, idx) => (
-                      <img key={idx} src={StarIcon} alt="별" />
-                    ))
+                  ? Array.from(
+                      {
+                        length: userDetail?.rating > 0 ? userDetail?.rating : 1,
+                      },
+                      (_, idx) => <img key={idx} src={StarIcon} alt="별" />
+                    )
                   : info.title === '경력'
-                  ? info.content.map((line, idx) => (
+                  ? userDetail?.experiences.map((line, idx) => (
                       <span key={idx}>
                         {line}
                         <br />
                       </span>
                     ))
-                  : info.content}
+                  : userDetail?.languages.map((language, idx) => (
+                      <span key={idx}>{getLanguage(language.name)}&nbsp;</span>
+                    ))}
               </div>
             </TutorDetailItem>
           ))}
@@ -136,11 +192,11 @@ export default function MyInfo({ userInfo }) {
           <s.DetailInfoWrapper>
             <s.DetailInfoContainer>
               <img src={GradeInfo} alt="학년" />
-              <div>{userInfo?.age || '학년 정보 없음'}</div>
+              <div>{userInfo?.age || '학년 정보 없음'}살</div>
             </s.DetailInfoContainer>
             <s.DetailInfoContainer tutor>
-              <img src={TutorIcon} alt="튜터" />
-              <div>{userInfo?.mentor || '튜터 정보 없음'}</div>
+              <img src={PointNewIcon} alt="포인트" />
+              <div>{userInfo?.point || '0'} 포인트</div>
             </s.DetailInfoContainer>
           </s.DetailInfoWrapper>
 
